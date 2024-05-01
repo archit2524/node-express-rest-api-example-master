@@ -1,0 +1,23 @@
+# Use a lightweight Node.js base image
+FROM node:18-alpine AS builder
+
+# Set the working directory for the build context
+WORKDIR /app
+
+# Copy the application code from the current directory
+COPY . .
+
+# Install dependencies
+RUN npm install
+
+# Create a new stage for running the application
+FROM node:18-alpine
+
+# Copy the production-ready code (without dependencies)
+COPY --from=builder /app /app
+
+# Expose the port your application listens on (adjust as needed)
+EXPOSE 3000
+
+# Set the command to execute when the container starts
+CMD [ "npm", "start" ]
